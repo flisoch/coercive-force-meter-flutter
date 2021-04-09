@@ -1,5 +1,6 @@
 
 
+import 'package:coercive_force_meter/ui/cfm_switching_on.dart';
 import 'package:flutter/material.dart';
 
 
@@ -14,7 +15,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: "Coercive Force Meter",
       theme: new ThemeData(primarySwatch: Colors.indigo),
-      home: _homeScreen(),
+      home: CfmSwitchingOn(),
     );
   }
 
