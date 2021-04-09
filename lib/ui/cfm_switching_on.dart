@@ -79,12 +79,7 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                             isConnected ? Colors.blueAccent : Colors.blueGrey,
                         shape: StadiumBorder(
                             side: BorderSide(color: Colors.black, width: 2)),
-                        child: Image.asset(
-                          'assets/images/pwer.png',
-                          height: 45,
-                          width: 45,
-                          // fit: BoxFit.fill
-                        ),
+                        child: Icon(isConnected?Icons.wifi:Icons.wifi_off, color: Colors.black, size: 32,),
                       )
                     ],
                   ),
