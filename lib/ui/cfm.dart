@@ -128,6 +128,8 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                         onPressed: isConnected
                             ? () {
                                 print("Start!");
+                                CfmEvent event = CfmStartTransmissionEvent();
+                                BlocProvider.of<CfmBloc>(context).add(event);
                               }
                             : () {
                                 final snackBar = SnackBar(
