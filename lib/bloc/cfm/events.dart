@@ -1,7 +1,7 @@
-abstract class CfmEvent {}
+abstract class WifiEvent {}
 
-class CfmConnectWifiEvent extends CfmEvent {}
+class WifiConnectEvent extends WifiEvent {}
 
-class CfmDisconnectWifiEvent extends CfmEvent {}
+class WifiDisconnectEvent extends WifiEvent {}
 
-class CfmStartTransmissionEvent extends CfmEvent {}
+class WifiStartTransmissionEvent extends WifiEvent {}

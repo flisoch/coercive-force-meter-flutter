@@ -49,6 +49,7 @@ class Server {
           print("Got Request to Disconnect! Disconnecting");
           clientSocket.write(data);
           clientSocket.flush();
+          clientSocket.destroy();
         }
       }
     });

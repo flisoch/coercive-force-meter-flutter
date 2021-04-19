@@ -15,7 +15,7 @@ class CfmSwitchingOn extends StatefulWidget {
 }
 
 class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
-  bool isConnected;
+
   int currentIndex = 0;
   final snackBar =
       SnackBar(content: Text('Сначала подключитесь к устройству!'));
@@ -26,27 +26,35 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CfmBloc, CfmState>(
+    return BlocBuilder<CfmBloc, WifiState>(
       builder: (context, state) {
-        if (state is CfmDisconnectedState) {
-          isConnected = false;
-        } else if (state is CfmConnectedState) {
-          isConnected = true;
-        }
+        print(state);
+        Color backgroundColor = getBackgroundColor(state);
         return Scaffold(
             appBar: AppBar(
-              backgroundColor:
-                  isConnected ? Colors.blueAccent : Colors.blueGrey,
+              backgroundColor: backgroundColor,
               title: Center(child: Text("Коэрцитиметр")),
             ),
-            body: _body(),
-            bottomNavigationBar: _bottomNavigationBar(),
-            backgroundColor: isConnected ? Colors.blueAccent : Colors.blueGrey);
+            body: _body(state, backgroundColor),
+            bottomNavigationBar: _bottomNavigationBar(state),
+            backgroundColor: backgroundColor
+        );
       },
     );
   }
 
-  Widget _body() {
+  Color getBackgroundColor(WifiState state) {
+    if (state is WifiDisconnectedState) {
+      return Colors.blueGrey;
+    } else if (state is WifiConnectedState) {
+      return Colors.blueAccent;
+    }
+    else  {
+      return Colors.blueGrey;
+    }
+  }
+
+  Widget _body(WifiState state, Color backgroundColor) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -73,7 +81,11 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                     child: Row(
                       children: [
                         Text(
-                          isConnected ? "Подключен" : "Не подключен",
+                          state is WifiConnectedState ? "Подключен" :
+                          state is WifiConnectingState? "Подключаюсь":
+                          state is WifiDisconnectedState ? "Не подключен":
+                          state is WifiConnectionErrorState? "Ошибка подключения":
+                          "Неизвестная ошибка",
                           style: TextStyle(fontSize: 28),
                         ),
                       ],
@@ -94,17 +106,16 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                     children: [
                       FloatingActionButton(
                         onPressed: () {
-                          CfmEvent event = isConnected
-                              ? CfmDisconnectWifiEvent()
-                              : CfmConnectWifiEvent();
+                          WifiEvent event = state is WifiConnectedState
+                              ? WifiDisconnectEvent()
+                              : WifiConnectEvent();
                           BlocProvider.of<CfmBloc>(context).add(event);
                         },
-                        backgroundColor:
-                            isConnected ? Colors.blueAccent : Colors.blueGrey,
+                        backgroundColor: backgroundColor,
                         shape: StadiumBorder(
                             side: BorderSide(color: Colors.black, width: 2)),
                         child: Icon(
-                          isConnected ? Icons.wifi : Icons.wifi_off,
+                          state is WifiConnectedState ? Icons.wifi : Icons.wifi_off,
                           color: Colors.black,
                           size: 32,
                         ),
@@ -125,10 +136,10 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                   Row(
                     children: [
                       FloatingActionButton(
-                        onPressed: isConnected
+                        onPressed: state is WifiConnectedState
                             ? () {
                                 print("Start!");
-                                CfmEvent event = CfmStartTransmissionEvent();
+                                WifiEvent event = WifiStartTransmissionEvent();
                                 BlocProvider.of<CfmBloc>(context).add(event);
                               }
                             : () {
@@ -146,8 +157,7 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                                     .showSnackBar(snackBar);
                               },
                         tooltip: 'Начать сбор данных',
-                        backgroundColor:
-                            isConnected ? Colors.blueAccent : Colors.blueGrey,
+                        backgroundColor: backgroundColor,
                         shape: StadiumBorder(
                             side: BorderSide(color: Colors.black, width: 2)),
                         autofocus: false,
@@ -176,12 +186,11 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                       FloatingActionButton(
                         onPressed: () {
                           setState(() {
-                            isConnected = !isConnected;
+                            // isConnected = !isConnected;
                           });
                         },
                         foregroundColor: Colors.blueGrey,
-                        backgroundColor:
-                            isConnected ? Colors.blueAccent : Colors.blueGrey,
+                        backgroundColor: backgroundColor,
                         shape: StadiumBorder(
                             side: BorderSide(color: Colors.black, width: 2)),
                         child: Image.asset(
@@ -208,12 +217,12 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
     );
   }
 
-  Widget _bottomNavigationBar() {
+  Widget _bottomNavigationBar(WifiState state) {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       selectedFontSize: 16,
-      selectedItemColor: isConnected ? Colors.black : Colors.indigo,
-      backgroundColor: isConnected ? Colors.blueAccent : Colors.blueGrey,
+      selectedItemColor: state is WifiConnectedState ? Colors.black : Colors.indigo,
+      backgroundColor: state is WifiConnectedState ? Colors.blueAccent : Colors.blueGrey,
       onTap: (value) {
         setState(() {
           currentIndex = value;

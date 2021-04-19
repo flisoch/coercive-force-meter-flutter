@@ -9,7 +9,8 @@ class SocketClient {
   String host = "192.168.1.167";
   int port = 4567;
   Socket serverSocket;
-
+  bool isConnected = false;
+  bool error = false;
   final String clientAddress;
   final int clientPort;
 
@@ -17,12 +18,13 @@ class SocketClient {
 
   Future<void> connect() async {
     await Socket.connect(host, port).then((Socket socket) {
+      isConnected = true;
       serverSocket = socket;
       serverSocket.listen(dataHandler,
           onError: errorHandler, onDone: doneHandler, cancelOnError: false);
     }).catchError((Object e) {
       print("Unable to connect: $e");
-      return e;
+      error = true;
     });
   }
 
@@ -69,6 +71,6 @@ class SocketClient {
     print("sending disconnect message: $messageString \n");
     serverSocket.write(messageString);
     serverSocket.flush();
-    // doneHandler();
+    doneHandler();
   }
 }

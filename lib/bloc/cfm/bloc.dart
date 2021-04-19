@@ -3,26 +3,35 @@ import 'package:coercive_force_meter/bloc/cfm/events.dart';
 import 'package:coercive_force_meter/bloc/cfm/states.dart';
 import 'package:coercive_force_meter/wifi_connection/socket_client.dart';
 
-class CfmBloc extends Bloc<CfmEvent, CfmState> {
+class CfmBloc extends Bloc<WifiEvent, WifiState> {
   SocketClient socket;
 
-  CfmBloc(CfmState initialState) : super(initialState);
+  CfmBloc(WifiState initialState) : super(initialState);
 
   @override
-  Stream<CfmState> mapEventToState(CfmEvent event) async* {
-    if (event is CfmConnectWifiEvent) {
+  Stream<WifiState> mapEventToState(WifiEvent event) async* {
+    if (event is WifiConnectEvent) {
       socket = SocketClient();
-      socket.connect();
-      yield CfmConnectedState();
+      yield WifiConnectingState();
+
+      await socket.connect();
+      if (socket.isConnected) {
+        yield WifiConnectedState();
+      }
+      if (socket.error) {
+        yield WifiConnectionErrorState();
+      }
     }
-    if (event is CfmDisconnectWifiEvent) {
-      socket.close();
-      yield CfmDisconnectedState();
+    if (event is WifiDisconnectEvent) {
+      if (socket != null) {
+        socket.close();
+      }
+      yield WifiDisconnectedState();
     }
 
-    if (event is CfmStartTransmissionEvent) {
+    if (event is WifiStartTransmissionEvent) {
       socket.getMessages();
-      yield CfmReceivingMessages();
+      yield WifiRxMeasurementsState();
     }
   }
 }

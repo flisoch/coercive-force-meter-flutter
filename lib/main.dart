@@ -12,12 +12,12 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => CfmBloc(CfmDisconnectedState()),
+      create: (BuildContext context) => CfmBloc(WifiDisconnectedState()),
       child: MaterialApp(
         title: "Coercive Force Meter",
         theme: new ThemeData(primarySwatch: Colors.indigo),
         home: CfmSwitchingOn(
-          bloc: CfmBloc(CfmDisconnectedState()),
+          bloc: CfmBloc(WifiDisconnectedState()),
         ),
       ),
     );

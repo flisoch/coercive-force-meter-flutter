@@ -1,11 +1,13 @@
-class CfmState {}
+class WifiState {}
 
-class CfmConnectedState extends CfmState {}
+class WifiConnectedState extends WifiState {}
 
-class CfmWifiOffState extends CfmState {}
+class WifiOffState extends WifiState {}
 
-class CfmConnectingState extends CfmState {}
+class WifiConnectionErrorState extends WifiState {}
 
-class CfmDisconnectedState extends CfmState {}
+class WifiConnectingState extends WifiState {}
 
-class CfmReceivingMessages extends CfmState {}
+class WifiDisconnectedState extends WifiState {}
+
+class WifiRxMeasurementsState extends WifiState {}
