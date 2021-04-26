@@ -1,6 +1,7 @@
 import 'package:coercive_force_meter/bloc/cfm/bloc.dart';
 import 'package:coercive_force_meter/bloc/cfm/events.dart';
 import 'package:coercive_force_meter/bloc/cfm/states.dart';
+import 'package:coercive_force_meter/ui/measuring_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -99,6 +100,7 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                   Row(
                     children: [
                       FloatingActionButton(
+                        heroTag: 'wifi',
                         onPressed: () {
                           WifiEvent event = state is WifiConnectedState
                               ? WifiDisconnectEvent()
@@ -132,11 +134,15 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                   Row(
                     children: [
                       FloatingActionButton(
+                        heroTag: 'measuring',
                         onPressed: state is WifiConnectedState
                             ? () {
                                 print("Start!");
                                 WifiEvent event = WifiStartTransmissionEvent();
                                 BlocProvider.of<CfmBloc>(context).add(event);
+                                Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => MeasuringScreen(),
+                                ));
                               }
                             : () {
                                 final snackBar = SnackBar(
@@ -180,6 +186,7 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                   Row(
                     children: [
                       FloatingActionButton(
+                          heroTag: 'results',
                           onPressed: () {
                             setState(() {
                               // isConnected = !isConnected;
