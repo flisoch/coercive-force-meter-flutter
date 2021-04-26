@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
-import 'package:coercive_force_meter/bloc/cfm/events.dart';
-import 'package:coercive_force_meter/bloc/cfm/states.dart';
+import 'package:coercive_force_meter/bloc/wifi/events.dart';
+import 'package:coercive_force_meter/bloc/wifi/states.dart';
 import 'package:coercive_force_meter/wifi_connection/socket_client.dart';
 
-class CfmBloc extends Bloc<WifiEvent, WifiState> {
+class WiFiBloc extends Bloc<WifiEvent, WifiState> {
   SocketClient socket;
-
-  CfmBloc(WifiState initialState) : super(initialState);
+  WifiState currentState;
+  WiFiBloc(WifiState initialState) : super(initialState);
 
   @override
   Stream<WifiState> mapEventToState(WifiEvent event) async* {
@@ -32,6 +32,9 @@ class CfmBloc extends Bloc<WifiEvent, WifiState> {
     if (event is WifiStartTransmissionEvent) {
       socket.getMessages();
       yield WifiRxMeasurementsState();
+    }
+    if (socket.received && socket.isConnected) {
+      yield WifiConnectedState();
     }
   }
 }

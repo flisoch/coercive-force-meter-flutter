@@ -1,6 +1,8 @@
-import 'package:coercive_force_meter/bloc/cfm/bloc.dart';
-import 'package:coercive_force_meter/bloc/cfm/events.dart';
-import 'package:coercive_force_meter/bloc/cfm/states.dart';
+import 'package:coercive_force_meter/bloc/measuring/bloc.dart';
+import 'package:coercive_force_meter/bloc/measuring/states.dart';
+import 'package:coercive_force_meter/bloc/wifi/bloc.dart';
+import 'package:coercive_force_meter/bloc/wifi/events.dart';
+import 'package:coercive_force_meter/bloc/wifi/states.dart';
 import 'package:coercive_force_meter/ui/measuring_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -20,7 +22,7 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CfmBloc, WifiState>(
+    return BlocBuilder<WiFiBloc, WifiState>(
       builder: (context, state) {
         print(state);
         Color backgroundColor = getBackgroundColor(state);
@@ -40,8 +42,14 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
       return Colors.blueGrey;
     } else if (state is WifiConnectedState) {
       return Colors.blueAccent;
-    } else {
+    } else if (state is WifiConnectingState) {
       return Colors.blueGrey;
+    } else if (state is WifiOffState) {
+      return Colors.blueGrey;
+    } else if (state is WifiConnectionErrorState) {
+      return Colors.blueGrey;
+    } else {
+      return Colors.blueAccent;
     }
   }
 
@@ -80,7 +88,7 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                                       ? "Не подключен"
                                       : state is WifiConnectionErrorState
                                           ? "Ошибка подключения"
-                                          : "Неизвестная ошибка",
+                                          : "Подключен",
                           style: TextStyle(fontSize: 28),
                         ),
                       ],
@@ -105,7 +113,7 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                           WifiEvent event = state is WifiConnectedState
                               ? WifiDisconnectEvent()
                               : WifiConnectEvent();
-                          BlocProvider.of<CfmBloc>(context).add(event);
+                          BlocProvider.of<WiFiBloc>(context).add(event);
                         },
                         backgroundColor: backgroundColor,
                         shape: StadiumBorder(
@@ -139,9 +147,14 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                             ? () {
                                 print("Start!");
                                 WifiEvent event = WifiStartTransmissionEvent();
-                                BlocProvider.of<CfmBloc>(context).add(event);
+                                BlocProvider.of<WiFiBloc>(context).add(event);
                                 Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => MeasuringScreen(),
+                                  builder: (context) {
+                                    return BlocProvider(
+                                        create: (BuildContext context) =>
+                                            MeasuringBloc(MeasuringIdleState()),
+                                        child: MeasuringScreen());
+                                  },
                                 ));
                               }
                             : () {

@@ -6,22 +6,29 @@ import 'package:coercive_force_meter/models/mask.dart';
 import 'package:coercive_force_meter/models/message.dart';
 
 class SocketClient {
+  static final SocketClient _socketClient = SocketClient._internal();
+  SocketClient._internal();
+  factory SocketClient() {
+    return _socketClient;
+  }
+
   String host = "192.168.1.167";
   int port = 4567;
   Socket serverSocket;
   bool isConnected = false;
   bool error = false;
-  final String clientAddress;
-  final int clientPort;
+  bool received = true;
 
-  SocketClient({this.clientAddress, this.clientPort});
 
   Future<void> connect() async {
     await Socket.connect(host, port).then((Socket socket) {
       isConnected = true;
       serverSocket = socket;
-      serverSocket.listen(dataHandler,
-          onError: errorHandler, onDone: doneHandler, cancelOnError: false);
+      serverSocket.listen(
+          dataHandler,
+          onError: errorHandler,
+          onDone: doneHandler,
+          cancelOnError: false);
     }).catchError((Object e) {
       print("Unable to connect: $e");
       error = true;
@@ -36,6 +43,7 @@ class SocketClient {
   }
 
   void dataHandler(data) {
+    received = false;
     print(new String.fromCharCodes(data));
     String stringData = new String.fromCharCodes(data);
     Map<String, dynamic> json = jsonDecode(stringData);
@@ -44,6 +52,9 @@ class SocketClient {
     Map<String, dynamic> messageData = json["data"];
 
     if (method == "post") {
+      if (topic == "/end_of_message") {
+        received = true;
+      }
       if (topic == "/messages") {
         Message message = Message.fromJson(messageData);
         print(message);
@@ -62,6 +73,8 @@ class SocketClient {
   }
 
   void doneHandler() {
+    received = true;
+    isConnected = false;
     serverSocket.destroy();
   }
 

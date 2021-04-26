@@ -41,6 +41,7 @@ class Server {
             sleep(Duration(seconds: 1));
             writeMessage(n++);
           }
+          endOfMessage();
           clientSocket.flush();
         } else if (topic == "/disconnect") {
           Map<String, dynamic> map = {"method": "post", "topic": "/disconnect"};
@@ -61,6 +62,14 @@ class Server {
     Map<String, dynamic> map = {"method": "post", "topic": "/messages"};
     map["data"] = message.toJson();
     print(map);
+    String data = jsonEncode(map);
+    print(data + '\n');
+    clientSocket.write(data);
+  }
+
+  void endOfMessage() {
+    print("sending End Of Message \n");
+    Map<String, dynamic> map = {"method": "post", "topic": "/end_of_message"};
     String data = jsonEncode(map);
     print(data + '\n');
     clientSocket.write(data);
