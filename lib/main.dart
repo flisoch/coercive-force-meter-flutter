@@ -16,9 +16,7 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: "Coercive Force Meter",
         theme: new ThemeData(primarySwatch: Colors.indigo),
-        home: CfmSwitchingOn(
-          bloc: CfmBloc(WifiDisconnectedState()),
-        ),
+        home: CfmSwitchingOn(),
       ),
     );
   }

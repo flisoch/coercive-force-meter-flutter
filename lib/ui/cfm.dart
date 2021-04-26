@@ -6,23 +6,16 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CfmSwitchingOn extends StatefulWidget {
-  final CfmBloc bloc;
-
-  const CfmSwitchingOn({Key key, this.bloc}) : super(key: key);
+  const CfmSwitchingOn({Key key}) : super(key: key);
 
   @override
-  _CfmSwitchingOnState createState() => _CfmSwitchingOnState(this.bloc);
+  _CfmSwitchingOnState createState() => _CfmSwitchingOnState();
 }
 
 class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
-
   int currentIndex = 0;
   final snackBar =
       SnackBar(content: Text('Сначала подключитесь к устройству!'));
-
-  final CfmBloc bloc;
-
-  _CfmSwitchingOnState(this.bloc);
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +29,7 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
               title: Center(child: Text("Коэрцитиметр")),
             ),
             body: _body(state, backgroundColor),
-            bottomNavigationBar: _bottomNavigationBar(state),
-            backgroundColor: backgroundColor
-        );
+            backgroundColor: backgroundColor);
       },
     );
   }
@@ -48,8 +39,7 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
       return Colors.blueGrey;
     } else if (state is WifiConnectedState) {
       return Colors.blueAccent;
-    }
-    else  {
+    } else {
       return Colors.blueGrey;
     }
   }
@@ -81,11 +71,15 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                     child: Row(
                       children: [
                         Text(
-                          state is WifiConnectedState ? "Подключен" :
-                          state is WifiConnectingState? "Подключаюсь":
-                          state is WifiDisconnectedState ? "Не подключен":
-                          state is WifiConnectionErrorState? "Ошибка подключения":
-                          "Неизвестная ошибка",
+                          state is WifiConnectedState
+                              ? "Подключен"
+                              : state is WifiConnectingState
+                                  ? "Подключаюсь"
+                                  : state is WifiDisconnectedState
+                                      ? "Не подключен"
+                                      : state is WifiConnectionErrorState
+                                          ? "Ошибка подключения"
+                                          : "Неизвестная ошибка",
                           style: TextStyle(fontSize: 28),
                         ),
                       ],
@@ -115,7 +109,9 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                         shape: StadiumBorder(
                             side: BorderSide(color: Colors.black, width: 2)),
                         child: Icon(
-                          state is WifiConnectedState ? Icons.wifi : Icons.wifi_off,
+                          state is WifiConnectedState
+                              ? Icons.wifi
+                              : Icons.wifi_off,
                           color: Colors.black,
                           size: 32,
                         ),
@@ -184,28 +180,26 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                   Row(
                     children: [
                       FloatingActionButton(
-                        onPressed: () {
-                          setState(() {
-                            // isConnected = !isConnected;
-                          });
-                        },
-                        foregroundColor: Colors.blueGrey,
-                        backgroundColor: backgroundColor,
-                        shape: StadiumBorder(
-                            side: BorderSide(color: Colors.black, width: 2)),
-                        child: Image.asset(
-                          'assets/images/filter-mask.png',
-                          height: 45,
-                          width: 45,
-                          // fit: BoxFit.fill
-                        ),
-                      )
+                          onPressed: () {
+                            setState(() {
+                              // isConnected = !isConnected;
+                            });
+                          },
+                          foregroundColor: Colors.blueGrey,
+                          backgroundColor: backgroundColor,
+                          shape: StadiumBorder(
+                              side: BorderSide(color: Colors.black, width: 2)),
+                          child: Icon(
+                            Icons.analytics_rounded,
+                            color: Colors.black,
+                            size: 32,
+                          ))
                     ],
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Row(
-                      children: [Text('Маска')],
+                      children: [Text('Графики')],
                     ),
                   )
                 ],
@@ -214,34 +208,6 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _bottomNavigationBar(WifiState state) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      selectedFontSize: 16,
-      selectedItemColor: state is WifiConnectedState ? Colors.black : Colors.indigo,
-      backgroundColor: state is WifiConnectedState ? Colors.blueAccent : Colors.blueGrey,
-      onTap: (value) {
-        setState(() {
-          currentIndex = value;
-        });
-      },
-      items: [
-        BottomNavigationBarItem(
-          label: "home",
-          icon: Icon(Icons.home),
-        ),
-        BottomNavigationBarItem(
-          label: "statistics",
-          icon: Icon(Icons.analytics_rounded),
-        ),
-        BottomNavigationBarItem(
-          label: "asdf",
-          icon: Icon(Icons.settings),
-        )
-      ],
     );
   }
 }
