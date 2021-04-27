@@ -1,9 +1,7 @@
-import 'package:coercive_force_meter/bloc/measuring/bloc.dart';
-import 'package:coercive_force_meter/bloc/measuring/states.dart';
 import 'package:coercive_force_meter/bloc/wifi/bloc.dart';
 import 'package:coercive_force_meter/bloc/wifi/events.dart';
 import 'package:coercive_force_meter/bloc/wifi/states.dart';
-import 'package:coercive_force_meter/ui/measuring_screen.dart';
+import 'package:coercive_force_meter/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -145,17 +143,7 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                         heroTag: 'measuring',
                         onPressed: state is WifiConnectedState
                             ? () {
-                                print("Start!");
-                                WifiEvent event = WifiStartTransmissionEvent();
-                                BlocProvider.of<WiFiBloc>(context).add(event);
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) {
-                                    return BlocProvider(
-                                        create: (BuildContext context) =>
-                                            MeasuringBloc(MeasuringIdleState()),
-                                        child: MeasuringScreen());
-                                  },
-                                ));
+                                Navigator.pushNamed(context, Routes.measure_preparation);
                               }
                             : () {
                                 final snackBar = SnackBar(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:coercive_force_meter/models/mask.dart';
 import 'package:coercive_force_meter/models/message.dart';
 
 void main() {
@@ -34,16 +35,7 @@ class Server {
       String topic = json["topic"];
 
       if (method == "get") {
-        if (topic == "/messages") {
-          print("Got Request to get Messages/DataPoints! \n");
-          int n = 1;
-          while (n < 5) {
-            sleep(Duration(seconds: 1));
-            writeMessage(n++);
-          }
-          endOfMessage();
-          clientSocket.flush();
-        } else if (topic == "/disconnect") {
+        if (topic == "/disconnect") {
           Map<String, dynamic> map = {"method": "post", "topic": "/disconnect"};
           map["data"] = {"data": "disconnect received. Good bye"};
           String data = jsonEncode(map);
@@ -51,6 +43,19 @@ class Server {
           clientSocket.write(data);
           clientSocket.flush();
           clientSocket.destroy();
+        }
+      } else if (method == "post") {
+        if (topic == "/gauss") {
+          print("Got Request to get Messages/DataPoints! \n");
+          Mask mask = Mask.fromJson(jsonDecode(json["message"]));
+          print(mask);
+          int n = 1;
+          while (n < 5) {
+            sleep(Duration(seconds: 1));
+            writeMessage(n++);
+          }
+          endOfMessage();
+          clientSocket.flush();
         }
       }
     });

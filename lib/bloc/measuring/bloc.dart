@@ -7,11 +7,6 @@ class MeasuringBloc extends Bloc<MeasuringEvent, MeasuringState> {
 
   @override
   Stream<MeasuringState> mapEventToState(event) async* {
-    if (event is MeasuringStartEvent) {
-      yield MeasuringStartedState();
-    }
-    if (event is MeasuringStopEvent) {
-      yield MeasuringStoppedState();
-    }
+
   }
 }

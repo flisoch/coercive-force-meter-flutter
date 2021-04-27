@@ -5,7 +5,7 @@ import 'package:coercive_force_meter/wifi_connection/socket_client.dart';
 
 class WiFiBloc extends Bloc<WifiEvent, WifiState> {
   SocketClient socket;
-  WifiState currentState;
+
   WiFiBloc(WifiState initialState) : super(initialState);
 
   @override
@@ -29,8 +29,9 @@ class WiFiBloc extends Bloc<WifiEvent, WifiState> {
       yield WifiDisconnectedState();
     }
 
-    if (event is WifiStartTransmissionEvent) {
-      socket.getMessages();
+    if (event is WifiSendMessageEvent) {
+      socket.sendMessage(
+          method: event.method, topic: event.topic, message: event.message);
       yield WifiRxMeasurementsState();
     }
     if (socket.received && socket.isConnected) {

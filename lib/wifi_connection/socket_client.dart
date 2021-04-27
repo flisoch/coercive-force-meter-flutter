@@ -19,16 +19,12 @@ class SocketClient {
   bool error = false;
   bool received = true;
 
-
   Future<void> connect() async {
     await Socket.connect(host, port).then((Socket socket) {
       isConnected = true;
       serverSocket = socket;
-      serverSocket.listen(
-          dataHandler,
-          onError: errorHandler,
-          onDone: doneHandler,
-          cancelOnError: false);
+      serverSocket.listen(dataHandler,
+          onError: errorHandler, onDone: doneHandler, cancelOnError: false);
     }).catchError((Object e) {
       print("Unable to connect: $e");
       error = true;
@@ -67,9 +63,13 @@ class SocketClient {
     }
   }
 
-  AsyncError errorHandler(error, StackTrace trace) {
-    print(error);
-    return error;
+  AsyncError errorHandler(err, StackTrace trace) {
+    received = true;
+    isConnected = false;
+    error = true;
+    serverSocket.destroy();
+    print(err);
+    return err;
   }
 
   void doneHandler() {
@@ -79,11 +79,26 @@ class SocketClient {
   }
 
   void close() {
-    Map<String, dynamic> request = {"method": "get", "topic": "/disconnect"};
+    print("sending disconnect message \n");
+    sendMessage(method: "get", topic: "/disconnect");
+    doneHandler();
+  }
+
+  void gauss({Mask mask}) {
+    Map<String, dynamic> maskMap = mask.toJson();
+    String messageString = jsonEncode(maskMap);
+    sendMessage(topic: "/gauss", message: messageString);
+  }
+
+  void sendMessage({String method, String topic, String message=""}) {
+    Map<String, dynamic> request = {
+      "method": method,
+      "topic": topic,
+      "message": message
+    };
     String messageString = jsonEncode(request);
-    print("sending disconnect message: $messageString \n");
+    print("sending message: $messageString \n");
     serverSocket.write(messageString);
     serverSocket.flush();
-    doneHandler();
   }
 }

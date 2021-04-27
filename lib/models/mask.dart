@@ -14,7 +14,7 @@ class Mask extends Data {
   }
 
   Map<String, dynamic> toJson() => {
-        "ints": List<dynamic>.from(mask.map((x) => x)),
+        "mask": List<dynamic>.from(mask.map((x) => x)),
       };
 
   static List<Mask> dummyMasks() {
