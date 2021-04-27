@@ -24,7 +24,7 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
   Widget build(BuildContext context) {
     return BlocBuilder<WiFiBloc, WifiState>(
       builder: (context, state) {
-        print(state);
+        print('WiFi state in Home Screen: $state');
         Color backgroundColor = getBackgroundColor(state);
         return Scaffold(
             appBar: AppBar(
