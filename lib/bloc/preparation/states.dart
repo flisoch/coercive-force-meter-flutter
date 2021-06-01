@@ -1,3 +1,5 @@
 class PreparationState {}
 
-class MeasuringMaskChosenState extends PreparationState {}
+class MeasuringTypeChosenState extends PreparationState {}
+
+class PreparationIdleState extends PreparationState {}

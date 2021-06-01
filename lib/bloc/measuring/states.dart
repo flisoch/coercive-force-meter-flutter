@@ -9,3 +9,9 @@ class MeasuringStartedState extends MeasuringState {}
 class MeasuringFinishedState extends MeasuringState {}
 
 class MeasuringStoppedState extends MeasuringState {}
+
+class MeasuringReceivedMessageState extends MeasuringState {
+  int messagesReceived;
+
+  MeasuringReceivedMessageState(this.messagesReceived);
+}

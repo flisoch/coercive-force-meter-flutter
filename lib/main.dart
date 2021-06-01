@@ -23,7 +23,7 @@ class App extends StatelessWidget {
           routes: {
             Routes.home: (context) => CfmSwitchingOn(),
             Routes.measure_preparation: (context) => PreparationScreen(),
-            Routes.gauss: (context) => MeasuringScreen(),
+            Routes.gauss: (context) => MeasuringScreen(ModalRoute.of(context).settings.arguments),
           }),
     );
   }
