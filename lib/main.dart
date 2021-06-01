@@ -1,4 +1,5 @@
 import 'package:coercive_force_meter/ui/cfm.dart';
+import 'package:coercive_force_meter/ui/charts_screen.dart';
 import 'package:coercive_force_meter/ui/preparation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,7 @@ class App extends StatelessWidget {
             Routes.home: (context) => CfmSwitchingOn(),
             Routes.measure_preparation: (context) => PreparationScreen(),
             Routes.gauss: (context) => MeasuringScreen(ModalRoute.of(context).settings.arguments),
+            Routes.charts: (context) => ChartsScreen(),
           }),
     );
   }

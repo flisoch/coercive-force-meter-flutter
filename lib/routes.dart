@@ -5,4 +5,5 @@ class Routes {
   static const mask_generate = '/mask_generate';
   static const demagnetize = '/demagnetize';
   static const charts = '/charts';
+  static const chart = '/charts/chart';
 }

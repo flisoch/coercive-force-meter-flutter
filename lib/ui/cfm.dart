@@ -189,9 +189,7 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                       FloatingActionButton(
                           heroTag: 'results',
                           onPressed: () {
-                            setState(() {
-                              // isConnected = !isConnected;
-                            });
+                            Navigator.pushNamed(context, Routes.charts);
                           },
                           foregroundColor: Colors.blueGrey,
                           backgroundColor: backgroundColor,
