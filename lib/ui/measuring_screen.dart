@@ -60,8 +60,8 @@ class _MeasuringState extends State<MeasuringScreen> {
                 backgroundColor: backgroundColor,
                 title: Text(title),
               ),
-              body: _body(backgroundColor),
-              backgroundColor: backgroundColor);
+              body: _body(Colors.white),
+              backgroundColor: Colors.white);
         },
       ),
     );
@@ -84,9 +84,10 @@ class _MeasuringState extends State<MeasuringScreen> {
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: LinearProgressIndicator(
           value: progressionValue,
+          backgroundColor: Colors.grey,
           valueColor: AlwaysStoppedAnimation<Color>(
-            // Colors.lightBlueAccent,
-            Colors.white,
+            Colors.blueAccent,
+            // Colors.white,
           )),
     );
   }
@@ -101,7 +102,7 @@ class _MeasuringState extends State<MeasuringScreen> {
               height: 40,
               child: ElevatedButton(
                 style:
-                    ElevatedButton.styleFrom(primary: Colors.lightBlueAccent),
+                    ElevatedButton.styleFrom(primary: Colors.blueAccent),
                 onPressed: () {
                   print('stop button pressed');
                 },

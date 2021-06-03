@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/wifi/bloc.dart';
 import 'bloc/wifi/states.dart';
+import 'models/record.dart';
 import 'routes.dart';
 import 'ui/measuring_screen.dart';
 
@@ -25,7 +26,7 @@ class App extends StatelessWidget {
             Routes.home: (context) => CfmSwitchingOn(),
             Routes.measure_preparation: (context) => PreparationScreen(),
             Routes.gauss: (context) => MeasuringScreen(ModalRoute.of(context).settings.arguments),
-            Routes.charts: (context) => ChartsScreen(),
+            Routes.charts: (context) => ChartsScreen(records: Record.dummyList()),
           }),
     );
   }

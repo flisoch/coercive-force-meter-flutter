@@ -25,4 +25,8 @@ class Message extends Data {
   Map<String, dynamic> toJson() {
     return {'n': n, 't': t, 'Ji': Ji, 'Jr': Jr, 'H': H};
   }
+
+  static List<Message> dummyList() {
+    return List();
+  }
 }

@@ -34,8 +34,8 @@ class _PreparationState extends State<PreparationScreen> {
                 backgroundColor: backgroundColor,
                 title: Text("Подготовка измерения"),
               ),
-              body: _body(state, backgroundColor, context),
-              backgroundColor: backgroundColor);
+              body: _body(state, Colors.white, context),
+              backgroundColor: Colors.white);
         },
       ),
     );
@@ -89,7 +89,7 @@ class _PreparationState extends State<PreparationScreen> {
         Column(
           children: [
             Radio(
-              activeColor: Colors.lightBlue,
+              activeColor: Colors.blueAccent,
               value: MeasuringType.NEW_MASK.toString(),
               groupValue: _radioValue,
               onChanged: (String value) {
@@ -140,7 +140,7 @@ class _PreparationState extends State<PreparationScreen> {
         Column(
           children: [
             Radio(
-              activeColor: Colors.lightBlue,
+              activeColor: Colors.blueAccent,
               value: MeasuringType.DEMAGNETIZE.toString(),
               groupValue: _radioValue,
               onChanged: (String value) {
@@ -199,7 +199,7 @@ class _PreparationState extends State<PreparationScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Radio(
-                    activeColor: Colors.lightBlue,
+                    activeColor: Colors.blueAccent,
                     value: mask.name,
                     groupValue: _radioValue,
                     onChanged: (String value) {
@@ -231,7 +231,7 @@ class _PreparationState extends State<PreparationScreen> {
                 style: ElevatedButton.styleFrom(
                     primary: _radioValue == null
                         ? Colors.black54
-                        : Colors.lightBlueAccent),
+                        : Colors.blueAccent),
                 onPressed: _radioValue == null
                     ? null
                     : () {
