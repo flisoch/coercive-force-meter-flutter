@@ -1,4 +1,4 @@
-import 'package:coercive_force_meter/ui/cfm.dart';
+import 'package:coercive_force_meter/ui/home_screen.dart';
 import 'package:coercive_force_meter/ui/charts_screen.dart';
 import 'package:coercive_force_meter/ui/preparation_screen.dart';
 import 'package:flutter/material.dart';

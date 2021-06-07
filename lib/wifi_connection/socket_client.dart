@@ -14,6 +14,7 @@ class SocketClient {
   }
 
   String host = "192.168.1.167";
+  // String host = "192.168.1.3";
   int port = 4567;
   Socket _serverSocket;
   bool isConnected = false;

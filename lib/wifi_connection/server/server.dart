@@ -37,7 +37,7 @@ class Server {
       if (method == "get") {
         if (topic == "/disconnect") {
           Map<String, dynamic> map = {"method": "post", "topic": "/disconnect"};
-          map["data"] = {"data": "disconnect received. Good bye"};
+          map["data"] = "disconnect received. Good bye";
           String data = jsonEncode(map);
           print("Got Request to Disconnect! Disconnecting");
           clientSocket.write(data);
