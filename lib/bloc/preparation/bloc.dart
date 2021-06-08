@@ -5,12 +5,12 @@ import 'package:coercive_force_meter/wifi_connection/socket_client.dart';
 
 class PreparationBloc extends Bloc<PreparationEvent, PreparationState> {
   PreparationBloc(PreparationState initialState) : super(initialState);
-  SocketClient socket;
+  PhoneSocket socket;
 
   @override
   Stream<PreparationState> mapEventToState(event) async* {
     if (socket == null) {
-      socket = SocketClient();
+      socket = PhoneSocket();
     }
   }
 }

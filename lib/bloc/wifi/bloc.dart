@@ -4,16 +4,16 @@ import 'package:coercive_force_meter/bloc/wifi/states.dart';
 import 'package:coercive_force_meter/wifi_connection/socket_client.dart';
 
 class WiFiBloc extends Bloc<WifiEvent, WifiState> {
-  SocketClient socket;
+  PhoneSocket socket;
   WiFiBloc(WifiState initialState) : super(initialState);
 
   @override
   Stream<WifiState> mapEventToState(WifiEvent event) async* {
     if (event is WifiConnectEvent) {
-      socket = SocketClient();
+      socket = PhoneSocket();
       yield WifiConnectingState();
 
-      await socket.connect();
+      await socket.start();
       if (socket.isConnected) {
         yield WifiConnectedState();
       }

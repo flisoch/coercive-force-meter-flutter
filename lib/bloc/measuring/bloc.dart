@@ -7,13 +7,13 @@ import 'package:coercive_force_meter/wifi_connection/socket_client.dart';
 
 class MeasuringBloc extends Bloc<MeasuringEvent, MeasuringState> {
   MeasuringBloc(MeasuringState initialState) : super(initialState);
-  SocketClient socket;
+  PhoneSocket socket;
   int N = 4;
 
   @override
   Stream<MeasuringState> mapEventToState(event) async* {
     if (socket == null) {
-      socket = SocketClient();
+      socket = PhoneSocket();
     }
     if (event is MeasuringStartEvent) {
       socket.sendMessage(
