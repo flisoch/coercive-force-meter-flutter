@@ -10,12 +10,17 @@ import 'message_protocol.dart';
 class PhoneSocket {
   Map<int, Completer> _completers = {};
 
-  String host = "192.168.1.167";
+  static final PhoneSocket _phoneSocket = PhoneSocket._internal();
 
-  // String host = "192.168.1.3";
+  PhoneSocket._internal();
+
+  factory PhoneSocket() {
+    return _phoneSocket;
+  }
+
   int port = 4567;
   Socket _cfmSocket;
-  ServerSocket _phoneSocket;
+  ServerSocket _serverSocket;
   bool isConnected = false;
   bool error = false;
   bool received = true;
@@ -25,6 +30,9 @@ class PhoneSocket {
     print('Connection from '
         '${client.remoteAddress.address}:${client.remotePort}');
     _cfmSocket = client;
+    // _connectionCompleters[1] = Completer<String>();
+    isConnected = true;
+
     _cfmSocket.listen((data) {
       String stringData = new String.fromCharCodes(data);
       Map<String, dynamic> json = jsonDecode(stringData);
@@ -34,14 +42,6 @@ class PhoneSocket {
       if (topic == Topic.disconnect) {
         print("Got Request to Disconnect! Disconnecting");
         sendDisconnectionAck();
-      } else if (topic == Topic.connect) {
-        String data = json["data"];
-        if (data == "hello") {
-          print("GOT HELLO");
-          sendConnectionAck();
-        } else if (data == "gack") {
-          isConnected = true;
-        }
       } else if (topic == Topic.mask) {
         Mask mask = Mask.fromJson(jsonDecode(json["data"]));
         print(mask);
@@ -61,13 +61,14 @@ class PhoneSocket {
   }
 
   Future<void> start() async {
-    ServerSocket.bind(InternetAddress.anyIPv4, 4567)
-        .then((ServerSocket socket) {
-      _phoneSocket = socket;
-      _phoneSocket.listen((client) {
-        handleConnection(client);
-      });
+    _serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 4567);
+    _serverSocket.listen((socket) {
+      handleConnection(socket);
     });
+
+    while(!isConnected) {
+      await Future.delayed(Duration(seconds: 1));
+    }
   }
 
   void doneHandler() {
@@ -77,23 +78,18 @@ class PhoneSocket {
   }
 
   Future<String> sendMessage(
-      {String method, String topic, String message = ""}) async {
+      {String topic, String message = ""}) async {
     _completers[1] = Completer<String>();
-    Map<String, dynamic> request = {
-      "method": method,
-      "topic": topic,
-      "message": message
-    };
-    String messageString = jsonEncode(request);
-    print("sending message: $messageString \n");
-    _cfmSocket.write(messageString);
+
+    print("sending message: $message \n");
+    _cfmSocket.write(topic);
     _cfmSocket.flush();
     return _completers[1].future;
   }
 
   void close() {
     print("sending disconnect message \n");
-    sendMessage(method: "get", topic: "/disconnect");
+    sendMessage(topic: Topic.disconnect.toShortString());
     doneHandler();
   }
 

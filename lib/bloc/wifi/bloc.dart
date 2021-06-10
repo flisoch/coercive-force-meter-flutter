@@ -1,3 +1,4 @@
+
 import 'package:bloc/bloc.dart';
 import 'package:coercive_force_meter/bloc/wifi/events.dart';
 import 'package:coercive_force_meter/bloc/wifi/states.dart';
@@ -14,6 +15,9 @@ class WiFiBloc extends Bloc<WifiEvent, WifiState> {
       yield WifiConnectingState();
 
       await socket.start();
+
+      await Future.delayed(Duration(milliseconds: 750));
+      print("HERE");
       if (socket.isConnected) {
         yield WifiConnectedState();
       }

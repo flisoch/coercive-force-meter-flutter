@@ -2,6 +2,7 @@ import 'package:coercive_force_meter/bloc/measuring/bloc.dart';
 import 'package:coercive_force_meter/bloc/measuring/events.dart';
 import 'package:coercive_force_meter/bloc/measuring/states.dart';
 import 'package:coercive_force_meter/models/measuring_type.dart';
+import 'package:coercive_force_meter/wifi_connection/message_protocol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,7 +39,7 @@ class _MeasuringState extends State<MeasuringScreen> {
           if (state is MeasuringIdleState) {
             if (measuringType == MeasuringType.GAUSS) {
               MeasuringEvent event = MeasuringStartEvent(
-                  method: "post", topic: "/gauss", message: mask);
+                   topic: Topic.gauss.toShortString(), message: mask);
               BlocProvider.of<MeasuringBloc>(context).add(event);
             }
           }

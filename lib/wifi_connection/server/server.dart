@@ -5,6 +5,9 @@ import 'package:coercive_force_meter/models/mask.dart';
 import 'package:coercive_force_meter/models/message.dart';
 
 void main() {
+  var qwer = "SDf\0jsdfj\0";
+
+  print(qwer.split('\0'));
   Server server = Server();
   server.start();
 }

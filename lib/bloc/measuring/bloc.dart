@@ -17,7 +17,7 @@ class MeasuringBloc extends Bloc<MeasuringEvent, MeasuringState> {
     }
     if (event is MeasuringStartEvent) {
       socket.sendMessage(
-          method: event.method, topic: event.topic, message: event.message);
+          topic: event.topic, message: event.message);
       while (socket.messagesReceived != N) {
         String message = await socket.getMessage(socket.messagesReceived + 1);
         print(socket.messagesReceived);
