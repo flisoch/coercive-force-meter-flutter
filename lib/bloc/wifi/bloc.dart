@@ -17,7 +17,6 @@ class WiFiBloc extends Bloc<WifiEvent, WifiState> {
       await socket.start();
 
       await Future.delayed(Duration(milliseconds: 750));
-      print("HERE");
       if (socket.isConnected) {
         yield WifiConnectedState();
       }

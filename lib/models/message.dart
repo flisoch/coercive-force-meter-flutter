@@ -3,9 +3,9 @@ import 'package:coercive_force_meter/models/data.dart';
 class Message extends Data {
   final int n;
   final int t;
-  final double Ji;
-  final double Jr;
   final double H;
+  final double Jr;
+  final double Ji;
 
   Message({this.n, this.t, this.Ji, this.Jr, this.H});
 
@@ -27,6 +27,16 @@ class Message extends Data {
   }
 
   static List<Message> dummyList() {
-    return List();
+    return [];
+  }
+
+  static Message fromString(String stringData) {
+    var split = stringData.split(" ");
+    return Message(
+      n: int.parse(split[1]),
+      H: double.parse(split[2]),
+      Jr: double.parse(split[3]),
+      Ji: double.parse(split[4]),
+    );
   }
 }

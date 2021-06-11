@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:coercive_force_meter/models/mask.dart';
 import 'package:coercive_force_meter/models/message.dart';
 
 import 'message_protocol.dart';
 
 class PhoneSocket {
   Map<int, Completer> _completers = {};
-
   static final PhoneSocket _phoneSocket = PhoneSocket._internal();
 
   PhoneSocket._internal();
@@ -35,26 +33,28 @@ class PhoneSocket {
 
     _cfmSocket.listen((data) {
       String stringData = new String.fromCharCodes(data);
-      Map<String, dynamic> json = jsonDecode(stringData);
-      String topicString = json["topic"];
+      print(stringData);
+      String topicString = stringData[0];
       Topic topic = Topic.from[topicString];
       received = false;
       if (topic == Topic.disconnect) {
         print("Got Request to Disconnect! Disconnecting");
         sendDisconnectionAck();
       } else if (topic == Topic.mask) {
-        Mask mask = Mask.fromJson(jsonDecode(json["data"]));
-        print(mask);
+        // Mask mask = Mask.fromJson(jsonDecode(json["data"]));
+        // print(mask);
       } else if (topic == Topic.gauss) {
-        Map<String, dynamic> messageData = json["data"];
-        if (messageData.containsKey("eof")) {
+        // Map<String, dynamic> messageData = json["data"];
+        int pointCount = int.parse(stringData[2]);
+        if (pointCount == GaussPointsAmount) {
+          print("Received all points");
           messagesReceived = 0;
           received = true;
         } else {
-          Message message = Message.fromJson(messageData);
+          Message message = Message.fromString(stringData);
           print(message);
           messagesReceived += 1;
-          _completers[messagesReceived].complete(jsonEncode(messageData));
+          _completers[messagesReceived].complete(message);
         }
       }
     });
@@ -74,7 +74,9 @@ class PhoneSocket {
   void doneHandler() {
     received = true;
     isConnected = false;
+    // _cfmSocket.close();
     _cfmSocket.destroy();
+    _serverSocket.close();
   }
 
   Future<String> sendMessage(
@@ -93,9 +95,9 @@ class PhoneSocket {
     doneHandler();
   }
 
-  Future<String> getMessage(int n) {
+  Future<Message> getMessage(int n) {
     print('AAAAAA $n');
-    _completers[n] = Completer<String>();
+    _completers[n] = Completer<Message>();
     return _completers[n].future;
   }
 

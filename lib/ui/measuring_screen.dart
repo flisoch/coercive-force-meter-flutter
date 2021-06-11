@@ -48,6 +48,7 @@ class _MeasuringState extends State<MeasuringScreen> {
           }
           if (state is MeasuringFinishedState) {
             progressionValue = 1;
+            // todo: change button from "Stop" to Ok  and add another button to see results
           }
           Color backgroundColor = Colors.blueAccent;
           String title = measuringType == MeasuringType.GAUSS
