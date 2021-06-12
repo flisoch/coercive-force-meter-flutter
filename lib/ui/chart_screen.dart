@@ -61,10 +61,10 @@ class _ChartScreenState extends State<ChartScreen> {
   Widget _body() {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.only(right: 22.0, bottom: 20),
+        padding: const EdgeInsets.only(right: 22.0, bottom: 20, left: 20),
         child: SizedBox(
-          width: 400,
-          height: 400,
+          width: 350,
+          height: 350,
           child: LineChart(
             LineChartData(
               lineTouchData: LineTouchData(
@@ -101,6 +101,10 @@ class _ChartScreenState extends State<ChartScreen> {
                   dotData: FlDotData(show: false),
                 ),
               ],
+              minX: -800,
+              maxX: 800,
+              minY: -0.2,
+              maxY: 0.25,
               titlesData: FlTitlesData(
                 leftTitles: SideTitles(
                   showTitles: true,
@@ -144,9 +148,7 @@ class _ChartScreenState extends State<ChartScreen> {
                 bottomTitles: SideTitles(
                   interval: 100,
                   getTitles: (value) {
-                    print(value);
                     int v = value.ceil();
-                    print(v);
                     switch (v) {
                       case -800:
                         return "-800";
