@@ -1,3 +1,4 @@
+import 'package:coercive_force_meter/ui/chart_screen.dart';
 import 'package:coercive_force_meter/ui/home_screen.dart';
 import 'package:coercive_force_meter/ui/charts_screen.dart';
 import 'package:coercive_force_meter/ui/preparation_screen.dart';
@@ -27,6 +28,7 @@ class App extends StatelessWidget {
             Routes.measure_preparation: (context) => PreparationScreen(),
             Routes.gauss: (context) => MeasuringScreen(ModalRoute.of(context).settings.arguments),
             Routes.charts: (context) => ChartsScreen(records: Record.dummyList()),
+            Routes.chart: (context) => ChartScreen(ModalRoute.of(context).settings.arguments)
           }),
     );
   }

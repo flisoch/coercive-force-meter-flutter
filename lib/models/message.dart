@@ -9,10 +9,6 @@ class Message extends Data {
 
   Message({this.n, this.t, this.Ji, this.Jr, this.H});
 
-  Stream<int> receiveMessage() {
-    return Stream.periodic(const Duration(seconds: 1), (x) => x).take(10);
-  }
-
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
         n: json['n'] as int,
@@ -30,13 +26,67 @@ class Message extends Data {
     return [];
   }
 
+  static Message fromFileString(String line) {
+    var split = line.split(" ");
+
+    var length = split.length;
+    double H;
+    double Jr;
+    double Ji;
+    for (var i = 0; i < length; i++) {
+      if (split[i] == '') {
+        continue;
+      } else {
+        print(split[i]);
+        if (H == null) {
+          H = double.parse(split[i]);
+        } else if (Jr == null) {
+          Jr = double.parse(split[i]);
+        } else if (Ji == null) {
+          Ji = double.parse(split[i]);
+        }
+      }
+    }
+    return Message(
+      H: H,
+      Jr: Jr,
+      Ji: Ji,
+    );
+  }
+
   static Message fromString(String stringData) {
     var split = stringData.split(" ");
+    var length = split.length;
+    double H;
+    double Jr;
+    double Ji;
+    for (var i = 0; i < length; i++) {
+      if (split[i] == " ") {
+        continue;
+      } else {
+        if (H == null) {
+          H = double.parse(split[i]);
+        } else if (Jr == null) {
+          Jr = double.parse(split[i]);
+        } else if (Ji == null) {
+          Ji = double.parse(split[i]);
+        }
+      }
+    }
+
     return Message(
       n: int.parse(split[1]),
       H: double.parse(split[2]),
       Jr: double.parse(split[3]),
       Ji: double.parse(split[4]),
     );
+  }
+
+  @override
+  String toString() {
+    String messageString = "";
+    messageString +=
+        n.toString() + H.toString() + Jr.toString() + Ji.toString();
+    return messageString;
   }
 }

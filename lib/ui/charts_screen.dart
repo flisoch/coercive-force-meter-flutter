@@ -31,7 +31,7 @@ class _ChartsState extends State<ChartsScreen> {
             title: Text('${records[index].sampleName}'),
             onTap: () {
               Navigator.pushNamed(context, Routes.chart,
-                  arguments: {"record": records[index]});
+                  arguments: {"record-name": records[index].sampleName});
             },
           );
         },

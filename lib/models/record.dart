@@ -15,4 +15,8 @@ class Record extends Data {
     List<Record> records = List.from([r1, r2, r3]);
     return records;
   }
+
+  static Record dummy() {
+
+  }
 }
