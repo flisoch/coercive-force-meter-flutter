@@ -16,11 +16,11 @@ class FileStorage {
   }
 
   Future<File> openFile(String fileName) async {
-    final path = await _localPath;
+    final path = await localPath;
     return File('$path/$fileName');
   }
 
-  Future<String> get _localPath async {
+  Future<String> get localPath async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }

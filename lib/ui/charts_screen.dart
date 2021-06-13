@@ -2,6 +2,7 @@ import 'package:coercive_force_meter/repository/file_storage.dart';
 import 'package:coercive_force_meter/repository/record_repository.dart';
 import 'package:coercive_force_meter/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 
 class ChartsScreen extends StatefulWidget {
   ChartsScreen();
@@ -96,7 +97,19 @@ class _ChartsState extends State<ChartsScreen> {
             removeItems(deleteNames);
           },
         ),
-        Icon(Icons.more_vert)
+        IconButton(
+          icon: Icon(Icons.share),
+          onPressed: () {
+            List<String> shareNames = [];
+            for (var i = 0; i < selectedItems.length; i++) {
+              if (selectedItems[i]) {
+                shareNames.add(recordNames[i]);
+              }
+            }
+            shareItems(shareNames);
+          },
+        ),
+        SizedBox(width: 15,),
       ],
       backgroundColor: backgroundColor,
     );
@@ -176,5 +189,19 @@ class _ChartsState extends State<ChartsScreen> {
 
   Widget _allUploadedIcon() {
     return Icon(Icons.cloud_done_outlined);
+  }
+
+  void shareItems(List<String> shareNames) async {
+    FileStorage fileStorage = FileStorage();
+    await fileStorage.init();
+    var localPath = await fileStorage.localPath;
+    var fileNames = shareNames.map((element) {
+      return '$localPath/$element.txt';
+    }).toList();
+    Share.shareFiles(fileNames);
+    setState(() {
+      selectedItems = recordNames.map((e) => false).toList();
+      _appBar = _defaultAppBar();
+    });
   }
 }
