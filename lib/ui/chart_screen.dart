@@ -15,18 +15,18 @@ class ChartScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _ChartScreenState(recordPath: recordName);
+    return _ChartScreenState(recordName: recordName);
   }
 }
 
 class _ChartScreenState extends State<ChartScreen> {
-  final String recordPath;
+  final String recordName;
   Record record;
   List<FlSpot> inductiveSpots = [];
   List<FlSpot> remanenceSpots = [];
   Color backgroundColor = Colors.blueAccent;
 
-  _ChartScreenState({this.recordPath});
+  _ChartScreenState({this.recordName});
 
   @override
   void initState() {
@@ -41,7 +41,7 @@ class _ChartScreenState extends State<ChartScreen> {
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text(record.sampleName),
+          title: Text("Графики измерений"),
           backgroundColor: backgroundColor,
         ),
         body: _body(),
@@ -52,9 +52,9 @@ class _ChartScreenState extends State<ChartScreen> {
   void getRecord() async {
     FileStorage fileStorage = FileStorage();
     await fileStorage.init();
-    List<Message> dataPoints = await fileStorage.readMessages(recordPath);
+    List<Message> dataPoints = await fileStorage.readMessages(recordName);
     setState(() {
-      record = Record(sampleName: recordPath, measurements: dataPoints);
+      record = Record(sampleName: recordName, measurements: dataPoints);
       initSpots(record.measurements);
     });
   }
@@ -279,7 +279,7 @@ class _ChartScreenState extends State<ChartScreen> {
           LineChartData(
             lineTouchData: LineTouchData(
               touchTooltipData: LineTouchTooltipData(
-                // maxContentWidth: 100,
+                  // maxContentWidth: 100,
                   tooltipBgColor: Colors.orange,
                   getTooltipItems: (touchedSpots) {
                     return touchedSpots.map((LineBarSpot touchedSpot) {

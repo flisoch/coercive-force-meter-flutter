@@ -38,11 +38,11 @@ class FileStorage {
   }
 
   Future<List<Message>> readMessages(String fileName) async {
-    if (file.path != fileName) {
-      file = await openFile('$fileName');
+    if (!file.path.contains('$fileName.txt')) {
+      file = await openFile('$fileName.txt');
     }
-    var lines = await file.readAsLines();
     print("READ FILE COUNT");
+    var lines = await file.readAsLines();
     print(lines.length);
     List<Message> messages = [];
     lines.forEach((element) {
@@ -74,19 +74,27 @@ class FileStorage {
     var filtered = allFiles
         .where((element) => element.toString().contains(".txt"))
         .map((e) {
+          print(e);
           var lastSeparator = e.path.lastIndexOf(Platform.pathSeparator);
           var substring = e.path.substring(lastSeparator + 1, e.path.length);
-          print(substring);
-          return substring;
+          lastSeparator = substring.lastIndexOf(".");
+          return substring.substring(0, lastSeparator);
         })
         .toList();
     return filtered;
   }
 
-  Future<File> changeFileNameOnly(File file, String newFileName) {
+  Future<File> changeFileNameOnly(String fileName, String newFileName) async {
+    var file = await openFile(fileName);
     var path = file.path;
     var lastSeparator = path.lastIndexOf(Platform.pathSeparator);
     var newPath = path.substring(0, lastSeparator + 1) + newFileName;
     return file.rename(newPath);
+  }
+
+  Future<File> removeFile(String fileName) async {
+    print("REMOVING ${fileName}");
+    var file = await openFile(fileName);
+    return file.delete();
   }
 }
