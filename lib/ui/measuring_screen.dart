@@ -145,19 +145,20 @@ class _MeasuringState extends State<MeasuringScreen> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(primary: Colors.blueAccent),
       onPressed: () {
-        Navigator.pushNamedAndRemoveUntil(context, Routes.chart, ModalRoute.withName(Routes.home), arguments: {"record-name": recordName});
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.chart, ModalRoute.withName(Routes.home),
+            arguments: {"record-name": recordName});
       },
       child: Text("Перейти к графику"),
     );
   }
+
   ElevatedButton _progressButton() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(primary: Colors.blueAccent),
       onPressed: () {
         print('stop button pressed');
-        MeasuringEvent event = MeasuringStopEvent(
-            topic: Topic.gauss.toShortString());
-        BlocProvider.of<MeasuringBloc>(context).add(event);
+
         Navigator.pop(context);
       },
       child: Text("Остановить"),
