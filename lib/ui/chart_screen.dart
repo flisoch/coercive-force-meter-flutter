@@ -15,18 +15,18 @@ class ChartScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _ChartScreenState(recordName: recordName);
+    return _ChartScreenState(recordPath: recordName);
   }
 }
 
 class _ChartScreenState extends State<ChartScreen> {
-  final String recordName;
+  final String recordPath;
   Record record;
   List<FlSpot> inductiveSpots = [];
   List<FlSpot> remanenceSpots = [];
   Color backgroundColor = Colors.blueAccent;
 
-  _ChartScreenState({this.recordName});
+  _ChartScreenState({this.recordPath});
 
   @override
   void initState() {
@@ -52,9 +52,9 @@ class _ChartScreenState extends State<ChartScreen> {
   void getRecord() async {
     FileStorage fileStorage = FileStorage();
     await fileStorage.init();
-    List<Message> dataPoints = await fileStorage.readMessages("gem.txt");
+    List<Message> dataPoints = await fileStorage.readMessages(recordPath);
     setState(() {
-      record = Record(sampleName: recordName, measurements: dataPoints);
+      record = Record(sampleName: recordPath, measurements: dataPoints);
       initSpots(record.measurements);
     });
   }

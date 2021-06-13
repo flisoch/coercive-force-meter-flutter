@@ -55,7 +55,8 @@ class Message extends Data {
   }
 
   static Message fromString(String stringData) {
-    var split = stringData.split(" ");
+    var split = stringData.substring(4).split(" ");
+    print(split);
     var length = split.length;
     double H;
     double Jr;
@@ -75,18 +76,16 @@ class Message extends Data {
     }
 
     return Message(
-      n: int.parse(split[1]),
-      H: double.parse(split[2]),
-      Jr: double.parse(split[3]),
-      Ji: double.parse(split[4]),
+      H: H,
+      Jr: Jr,
+      Ji: Ji,
     );
   }
 
   @override
   String toString() {
     String messageString = "";
-    messageString +=
-        n.toString() + H.toString() + Jr.toString() + Ji.toString();
+    messageString += H.toString() + " " + Jr.toString() + " "+ Ji.toString();
     return messageString;
   }
 }

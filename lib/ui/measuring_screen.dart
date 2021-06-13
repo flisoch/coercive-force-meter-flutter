@@ -25,7 +25,6 @@ class _MeasuringState extends State<MeasuringScreen> {
   final String mask;
 
   double progressionValue = 0;
-  final int N = 4;
 
   _MeasuringState(this.measuringType, this.mask);
 
@@ -44,7 +43,7 @@ class _MeasuringState extends State<MeasuringScreen> {
             }
           }
           if (state is MeasuringReceivedMessageState) {
-            progressionValue = state.messagesReceived / N;
+            progressionValue = state.messagesReceived / GaussPointsAmount;
           }
           if (state is MeasuringFinishedState) {
             progressionValue = 1;

@@ -21,7 +21,7 @@ class PhoneSocket {
   ServerSocket _serverSocket;
   bool isConnected = false;
   bool error = false;
-  bool received = true;
+  bool received = false;
   int messagesReceived = 0;
 
   void handleConnection(Socket client) {
@@ -45,12 +45,18 @@ class PhoneSocket {
         // print(mask);
       } else if (topic == Topic.gauss) {
         // Map<String, dynamic> messageData = json["data"];
-        int pointCount = int.parse(stringData[2]);
-        if (pointCount == GaussPointsAmount) {
+        String pointCount = stringData.split(" ")[1];
+        print(pointCount);
+        if (pointCount == "-1") {
           print("Received all points");
           messagesReceived = 0;
           received = true;
-        } else {
+          _completers = {};
+        } else if (pointCount == "0"){
+          print("G TOPIC RECEIVED");
+          _completers[0].complete("OK");
+        }
+        else {
           Message message = Message.fromString(stringData);
           print(message);
           messagesReceived += 1;
@@ -81,12 +87,12 @@ class PhoneSocket {
 
   Future<String> sendMessage(
       {String topic, String message = ""}) async {
-    _completers[1] = Completer<String>();
-
+    _completers[0] = Completer<String>();
+    received = false;
     print("sending message: $message \n");
     _cfmSocket.write(topic);
     _cfmSocket.flush();
-    return _completers[1].future;
+    return _completers[0].future;
   }
 
   void close() {

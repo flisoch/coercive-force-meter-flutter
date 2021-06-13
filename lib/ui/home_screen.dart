@@ -110,7 +110,9 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                         onPressed: () {
                           WifiEvent event = state is WifiConnectedState
                               ? WifiDisconnectEvent()
-                              : WifiConnectEvent();
+                              : state is WifiConnectingState
+                                  ? WifiDisconnectEvent()
+                                  : WifiConnectEvent();
                           BlocProvider.of<WiFiBloc>(context).add(event);
                         },
                         backgroundColor: backgroundColor,
@@ -143,7 +145,8 @@ class _CfmSwitchingOnState extends State<CfmSwitchingOn> {
                         heroTag: 'measuring',
                         onPressed: state is WifiConnectedState
                             ? () {
-                                Navigator.pushNamed(context, Routes.measure_preparation);
+                                Navigator.pushNamed(
+                                    context, Routes.measure_preparation);
                               }
                             : () {
                                 final snackBar = SnackBar(
