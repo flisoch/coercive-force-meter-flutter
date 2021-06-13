@@ -37,7 +37,6 @@ class Message extends Data {
       if (split[i] == '') {
         continue;
       } else {
-        print(split[i]);
         if (H == null) {
           H = double.parse(split[i]);
         } else if (Jr == null) {
@@ -56,7 +55,6 @@ class Message extends Data {
 
   static Message fromString(String stringData) {
     var split = stringData.substring(4).split(" ");
-    print(split);
     var length = split.length;
     double H;
     double Jr;

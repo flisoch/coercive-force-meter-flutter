@@ -1,4 +1,5 @@
-import 'package:coercive_force_meter/repository/FileStorage.dart';
+import 'package:coercive_force_meter/repository/file_storage.dart';
+import 'package:coercive_force_meter/repository/record_repository.dart';
 import 'package:coercive_force_meter/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -10,11 +11,14 @@ class ChartsScreen extends StatefulWidget {
 }
 
 class _ChartsState extends State<ChartsScreen> {
+  FileStorage fileStorage;
+  RecordRepository recordRepository;
   List<String> recordNames;
   Color backgroundColor = Colors.blueAccent;
   Color selectedColor = Colors.black12;
   List<bool> selectedItems = [];
   AppBar _appBar;
+  Icon _icon;
   bool anySelected = false;
 
   _ChartsState();
@@ -23,11 +27,12 @@ class _ChartsState extends State<ChartsScreen> {
   void initState() {
     super.initState();
     getRecords();
+    _icon = _defaultCloudIcon();
     _appBar = _defaultAppBar();
   }
 
   void getRecords() async {
-    FileStorage fileStorage = FileStorage();
+    fileStorage = FileStorage();
     await fileStorage.init();
     List<String> recordNames = await fileStorage.getRecordNames();
     setState(() {
@@ -41,6 +46,19 @@ class _ChartsState extends State<ChartsScreen> {
   AppBar _defaultAppBar() {
     return AppBar(
       title: Text("Графики измерений"),
+      actions: <Widget>[
+        IconButton(onPressed: () async {
+          await uploadAllFiles();
+          setState(() {
+            _icon = _allUploadedIcon();
+            _appBar = _defaultAppBar();
+          });
+        }, icon: _icon),
+        SizedBox(
+          width: 30,
+          height: 30,
+        )
+      ],
       backgroundColor: backgroundColor,
     );
   }
@@ -134,5 +152,29 @@ class _ChartsState extends State<ChartsScreen> {
       selectedItems = recordNames.map((e) => false).toList();
       _appBar = _defaultAppBar();
     });
+  }
+
+  Future<void> uploadAllFiles() async {
+    setState(() {
+      _icon = _uploadingIcon();
+      _appBar = _defaultAppBar();
+    });
+    recordRepository = RecordRepository();
+    await recordRepository.init();
+    recordNames.forEach((element) async {
+      await recordRepository.saveRecord(element);
+    });
+  }
+
+  Widget _defaultCloudIcon() {
+    return Icon(Icons.cloud_upload_outlined);
+  }
+
+  Widget _uploadingIcon() {
+    return Icon(Icons.sync);
+  }
+
+  Widget _allUploadedIcon() {
+    return Icon(Icons.cloud_done_outlined);
   }
 }

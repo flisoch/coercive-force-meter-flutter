@@ -1,6 +1,6 @@
 import 'package:coercive_force_meter/models/message.dart';
 import 'package:coercive_force_meter/models/record.dart';
-import 'package:coercive_force_meter/repository/FileStorage.dart';
+import 'package:coercive_force_meter/repository/file_storage.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

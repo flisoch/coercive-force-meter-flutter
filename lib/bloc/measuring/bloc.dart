@@ -3,7 +3,7 @@ import 'package:coercive_force_meter/bloc/measuring/events.dart';
 import 'package:coercive_force_meter/bloc/measuring/states.dart';
 import 'package:coercive_force_meter/models/message.dart';
 import 'package:coercive_force_meter/models/record.dart';
-import 'package:coercive_force_meter/repository/FileStorage.dart';
+import 'package:coercive_force_meter/repository/file_storage.dart';
 import 'package:coercive_force_meter/wifi_connection/socket_client.dart';
 
 class MeasuringBloc extends Bloc<MeasuringEvent, MeasuringState> {
@@ -33,9 +33,6 @@ class MeasuringBloc extends Bloc<MeasuringEvent, MeasuringState> {
         yield MeasuringReceivedMessageState(socket.messagesReceived);
       }
 
-      // var list = await fileStorage.readMessages(record.sampleName + ".txt");
-      // print("READ LIST LENGTH");
-      // print(list.length);
       yield MeasuringFinishedState();
       socket.messagesReceived = 0;
     }

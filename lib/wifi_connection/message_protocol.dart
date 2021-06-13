@@ -1,6 +1,6 @@
 enum Topic { from, connect, disconnect, gauss, mask, demagnetize }
 
-const GaussPointsAmount = 600;
+const GaussPointsAmount = 60;
 
 extension TopicIndex on Topic {
   // Overload the [] getter to get the name of the topic.
