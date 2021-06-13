@@ -6,6 +6,12 @@ class MeasuringStartEvent extends MeasuringEvent {
   MeasuringStartEvent({this.topic, this.message});
 }
 
-class MeasuringStopEvent extends MeasuringEvent {}
+class MeasuringStopEvent extends MeasuringEvent {
+  String topic;
+  MeasuringStopEvent({this.topic});
+}
+
+class MeasuringFinishEvent extends MeasuringEvent {
+}
 
 class MeasuringReceiveMessageEvent extends MeasuringEvent {}

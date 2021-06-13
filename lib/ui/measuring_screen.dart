@@ -6,6 +6,8 @@ import 'package:coercive_force_meter/wifi_connection/message_protocol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../routes.dart';
+
 class MeasuringScreen extends StatefulWidget {
   MeasuringType measuringType;
   String mask;
@@ -23,10 +25,18 @@ class MeasuringScreen extends StatefulWidget {
 class _MeasuringState extends State<MeasuringScreen> {
   final MeasuringType measuringType;
   final String mask;
-
+  Text descriptionText;
+  ElevatedButton button;
   double progressionValue = 0;
 
   _MeasuringState(this.measuringType, this.mask);
+
+  @override
+  void initState() {
+    descriptionText = _descriptionProgressText();
+    button = _progressButton();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +48,25 @@ class _MeasuringState extends State<MeasuringScreen> {
           if (state is MeasuringIdleState) {
             if (measuringType == MeasuringType.GAUSS) {
               MeasuringEvent event = MeasuringStartEvent(
-                   topic: Topic.gauss.toShortString(), message: mask);
+                  topic: Topic.gauss.toShortString(), message: mask);
               BlocProvider.of<MeasuringBloc>(context).add(event);
             }
           }
           if (state is MeasuringReceivedMessageState) {
             progressionValue = state.messagesReceived / GaussPointsAmount;
+            print(progressionValue);
+            if (GaussPointsAmount - state.messagesReceived < 5) {
+              // print("IM HERE");
+              // MeasuringEvent event = MeasuringFinishEvent();
+              // BlocProvider.of<MeasuringBloc>(context).add(event);
+            }
           }
           if (state is MeasuringFinishedState) {
+            print("STATE IS $state");
             progressionValue = 1;
+            descriptionText = _descriptionFinishedText();
+            button = _finishedButton(state.recordName);
+
             // todo: change button from "Stop" to Ok  and add another button to see results
           }
           Color backgroundColor = Colors.blueAccent;
@@ -77,7 +97,7 @@ class _MeasuringState extends State<MeasuringScreen> {
     return Container(
         margin: EdgeInsets.only(top: 250),
         padding: EdgeInsets.all(10),
-        child: Text("Процесс выполняется...", style: TextStyle(fontSize: 16),));
+        child: descriptionText);
   }
 
   Widget _progressionIndicator() {
@@ -101,16 +121,46 @@ class _MeasuringState extends State<MeasuringScreen> {
             SizedBox(
               width: 300,
               height: 40,
-              child: ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(primary: Colors.blueAccent),
-                onPressed: () {
-                  print('stop button pressed');
-                },
-                child: Text("Остановить"),
-              ),
+              child: button,
             )
           ],
         ));
+  }
+
+  Text _descriptionProgressText() {
+    return Text(
+      "Процесс выполняется...",
+      style: TextStyle(fontSize: 16),
+    );
+  }
+
+  Text _descriptionFinishedText() {
+    return Text(
+      "Процесс успешно выполнен",
+      style: TextStyle(fontSize: 16),
+    );
+  }
+
+  ElevatedButton _finishedButton(String recordName) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(primary: Colors.blueAccent),
+      onPressed: () {
+        Navigator.pushNamedAndRemoveUntil(context, Routes.chart, ModalRoute.withName(Routes.home), arguments: {"record-name": recordName});
+      },
+      child: Text("Перейти к графику"),
+    );
+  }
+  ElevatedButton _progressButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(primary: Colors.blueAccent),
+      onPressed: () {
+        print('stop button pressed');
+        MeasuringEvent event = MeasuringStopEvent(
+            topic: Topic.gauss.toShortString());
+        BlocProvider.of<MeasuringBloc>(context).add(event);
+        Navigator.pop(context);
+      },
+      child: Text("Остановить"),
+    );
   }
 }

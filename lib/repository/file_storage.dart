@@ -30,9 +30,6 @@ class FileStorage {
     if (!file.path.contains(fileName)) {
       file = await openFile(fileName);
     }
-
-    print("WRITE FILE PATH");
-    print(file.path);
     String messageString = message.toString();
     return file.writeAsString('$messageString\n', mode: FileMode.append);
   }
@@ -58,7 +55,7 @@ class FileStorage {
       file = await localFile.writeAsBytes(
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
     }
-    print(file.path);
+    print("Init FileStorage");
   }
 
   Future<File> writeToFile(ByteData data, String path) {
@@ -74,7 +71,6 @@ class FileStorage {
     var filtered = allFiles
         .where((element) => element.toString().contains(".txt"))
         .map((e) {
-          print(e);
           var lastSeparator = e.path.lastIndexOf(Platform.pathSeparator);
           var substring = e.path.substring(lastSeparator + 1, e.path.length);
           lastSeparator = substring.lastIndexOf(".");

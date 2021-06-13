@@ -28,12 +28,11 @@ class PhoneSocket {
     print('Connection from '
         '${client.remoteAddress.address}:${client.remotePort}');
     _cfmSocket = client;
-    // _connectionCompleters[1] = Completer<String>();
     isConnected = true;
 
     _cfmSocket.listen((data) {
       String stringData = new String.fromCharCodes(data);
-      print(stringData);
+      // print(stringData);
       String topicString = stringData[0];
       Topic topic = Topic.from[topicString];
       received = false;
@@ -46,7 +45,6 @@ class PhoneSocket {
       } else if (topic == Topic.gauss) {
         // Map<String, dynamic> messageData = json["data"];
         String pointCount = stringData.split(" ")[1];
-        print(pointCount);
         if (pointCount == "-1") {
           print("Received all points");
           messagesReceived = 0;
@@ -58,7 +56,6 @@ class PhoneSocket {
         }
         else {
           Message message = Message.fromString(stringData);
-          print(message);
           messagesReceived += 1;
           _completers[messagesReceived].complete(message);
         }
@@ -102,7 +99,6 @@ class PhoneSocket {
   }
 
   Future<Message> getMessage(int n) {
-    print('AAAAAA $n');
     _completers[n] = Completer<Message>();
     return _completers[n].future;
   }

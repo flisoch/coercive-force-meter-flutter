@@ -6,7 +6,10 @@ class MeasuringIdleState extends MeasuringState {}
 
 class MeasuringStartedState extends MeasuringState {}
 
-class MeasuringFinishedState extends MeasuringState {}
+class MeasuringFinishedState extends MeasuringState {
+  String recordName;
+  MeasuringFinishedState(this.recordName);
+}
 
 class MeasuringStoppedState extends MeasuringState {}
 
