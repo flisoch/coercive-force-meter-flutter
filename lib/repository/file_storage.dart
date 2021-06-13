@@ -56,6 +56,7 @@ class FileStorage {
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
     }
     print("Init FileStorage");
+    print(file.path);
   }
 
   Future<File> writeToFile(ByteData data, String path) {
@@ -81,10 +82,12 @@ class FileStorage {
   }
 
   Future<File> changeFileNameOnly(String fileName, String newFileName) async {
-    var file = await openFile(fileName);
+    var file = await openFile('$fileName.txt');
     var path = file.path;
     var lastSeparator = path.lastIndexOf(Platform.pathSeparator);
-    var newPath = path.substring(0, lastSeparator + 1) + newFileName;
+    var newPath = path.substring(0, lastSeparator + 1) + newFileName + ".txt";
+    print("Переименуем в ");
+    print(newPath);
     return file.rename(newPath);
   }
 
@@ -93,4 +96,6 @@ class FileStorage {
     var file = await openFile(fileName);
     return file.delete();
   }
+
+  void rename(String oldName, String editValueText) {}
 }

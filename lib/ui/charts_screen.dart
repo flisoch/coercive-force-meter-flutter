@@ -2,6 +2,7 @@ import 'package:coercive_force_meter/repository/file_storage.dart';
 import 'package:coercive_force_meter/repository/record_repository.dart';
 import 'package:coercive_force_meter/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:share/share.dart';
 
 class ChartsScreen extends StatefulWidget {
@@ -21,7 +22,8 @@ class _ChartsState extends State<ChartsScreen> {
   AppBar _appBar;
   Icon _icon;
   bool anySelected = false;
-
+  TextEditingController _textEditingController = TextEditingController();
+  String editValueText;
   _ChartsState();
 
   @override
@@ -48,13 +50,15 @@ class _ChartsState extends State<ChartsScreen> {
     return AppBar(
       title: Text("Графики измерений"),
       actions: <Widget>[
-        IconButton(onPressed: () async {
-          await uploadAllFiles();
-          setState(() {
-            _icon = _allUploadedIcon();
-            _appBar = _defaultAppBar();
-          });
-        }, icon: _icon),
+        IconButton(
+            onPressed: () async {
+              await uploadAllFiles();
+              setState(() {
+                _icon = _allUploadedIcon();
+                _appBar = _defaultAppBar();
+              });
+            },
+            icon: _icon),
         SizedBox(
           width: 30,
           height: 30,
@@ -79,12 +83,7 @@ class _ChartsState extends State<ChartsScreen> {
         },
       ),
       actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.edit),
-          onPressed: () {
-            print("Edit pressed");
-          },
-        ),
+        IconButton(icon: Icon(Icons.edit), onPressed: _showDialog),
         IconButton(
           icon: Icon(Icons.delete),
           onPressed: () {
@@ -109,7 +108,9 @@ class _ChartsState extends State<ChartsScreen> {
             shareItems(shareNames);
           },
         ),
-        SizedBox(width: 15,),
+        SizedBox(
+          width: 15,
+        ),
       ],
       backgroundColor: backgroundColor,
     );
@@ -203,5 +204,62 @@ class _ChartsState extends State<ChartsScreen> {
       selectedItems = recordNames.map((e) => false).toList();
       _appBar = _defaultAppBar();
     });
+  }
+
+  void _showDialog() async {
+    int firstSelected = selectedItems.indexOf(true);
+    await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          // shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.all(Radius.circular(5))),
+          contentPadding: const EdgeInsets.all(16.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              new Row(
+                children: <Widget>[
+                  new Expanded(
+                    child: new TextField(
+                      onChanged: (value) {
+                        editValueText = value;
+                      },
+                      controller: _textEditingController,
+                      autofocus: true,
+                      decoration: new InputDecoration(
+                          labelText: 'Новое название', hintText: ''),
+                    ),
+                  ),
+                ],
+              ),
+              new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                new TextButton(
+                    child: const Text('ОК'),
+                    onPressed: () {
+                      setState(() {
+                        String oldName = recordNames[firstSelected];
+                        recordNames[firstSelected] = editValueText;
+                        selectedItems[firstSelected] = false;
+                        fileStorage.changeFileNameOnly(oldName, editValueText);
+                        _appBar = _defaultAppBar();
+                        _textEditingController.clear();
+                        Navigator.pop(context);
+                      });
+                    }),
+                new TextButton(
+                    child: const Text('ОТМЕНИТЬ'),
+                    onPressed: () {
+                      _textEditingController.clear();
+                      Navigator.pop(context);
+                    })
+              ]),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
